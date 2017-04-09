@@ -228,7 +228,7 @@ std::string DB::getAndRecreateSignature(std::vector<std::string> data, int recor
 	} catch (int e) {
 		return "" + e;
 	}
-	return "<" + data[2] + "," + data[3] + "," + data[4] + ">\n<" + data[5] + "," + data[6]+ "," + data[7] + ">\n" + data[8];
+	return "<" + data[2] + "," + data[3] + "," + data[4] + ">\n<" + data[5] + "," + data[6]+ "," + data[7] + ">\n" + data[8] + "\n";
 }
 
 

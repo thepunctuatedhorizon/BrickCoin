@@ -278,7 +278,7 @@ int main()
 	int int12;
 	std::cin >> int12;
 	
-	TestClient::testClient(2, int1, (*coin).getHashSignature());
+	TestClient::testClient(2, int1, (*coin).getSignature());
 
 	std::cout << "END!" << std::endl;
 	std::string str2;

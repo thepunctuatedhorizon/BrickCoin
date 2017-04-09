@@ -39,9 +39,9 @@
 			//This function returns true only if the verification process worked;
 			bool didItVerify();
 
-			//BrickCoin getCoin() {
-			//	return (*coin);
-			//}
+			BrickCoin getCoin() {
+				return coin;
+			}
 
 		private:
 
@@ -102,7 +102,7 @@
 			//This variable stores whether the brick was initialized properly.
 			bool isInitialized;
 
-			//BrickCoin* coin;
+			BrickCoin coin;
 
 
 	};

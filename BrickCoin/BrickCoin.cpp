@@ -23,8 +23,46 @@
 #include "Multiplier.h"
 #include "Node.h"
 
+BrickCoin::BrickCoin() {
+	didItVerify = false;
+	signature = "NOT VERIFIED";
+}
 
+BrickCoin::BrickCoin(EulerBrick brck, bool verified) {
+	brick = brck;
+	didItVerify = verified;
+	signature = "Not Verified";
 
+	//Required definition
+	char mdString[SHA512_DIGEST_LENGTH * 2 + 1];
+
+	if (didItVerify) {
+
+		//Getting the Hash valuse converted to strings
+		char hashA1[17];
+		char hashB1[17];
+		char hashC1[17];
+
+		//Storing the string values of the hash
+		std::snprintf(hashA1, sizeof(hashA1), "%x", brick.getHashA());
+		std::snprintf(hashB1, sizeof(hashB1), "%x", brick.getHashB());
+		std::snprintf(hashC1, sizeof(hashC1), "%x", brick.getHashC());
+
+		//Signature generation
+		//TODO: ACTUALLY MAKE THIS USEFUL!  WE NEED TO put them in order? l - g? All permutations?
+		//TODO: Double SHA512 hashing? or just once?
+		signature = "";
+		signature = "<" + brick.getA() + "," + brick.getB() + "," + brick.getC() + ">\n";
+
+		signature = signature + "<" + hashA1 + "," + hashB1 + "," + hashC1 + ">";
+
+		signature = signature + getHashSignature() + "\n";
+	}
+	else {
+
+		signature = "Coin Not Valid";
+	}
+}
 BrickCoin::BrickCoin(EulerBrick brck) {
 
 	//Storing the brick to the coin;
@@ -32,6 +70,10 @@ BrickCoin::BrickCoin(EulerBrick brck) {
 
 	//Initializing didItVerify to the false state to prevent invalid verifications;
 	didItVerify = false;
+	signature = "Not Verified";
+
+	//Required definition
+	char mdString[SHA512_DIGEST_LENGTH * 2 + 1];
 
 	//Starting up the Verification process;
 	EBVerify* verifier = new EBVerify(brick);
@@ -57,8 +99,8 @@ BrickCoin::BrickCoin(EulerBrick brck) {
 		signature = "";
 		signature = "<" + brick.getA() + "," + brick.getB() + "," + brick.getC() + ">\n";
 
-		signature = signature + "<" + hashA1 + "," + hashB1 + "," + hashC1 + ">";
-
+		signature = signature + "<" + hashA1 + "," + hashB1 + "," + hashC1 + ">\n";
+		signature = signature + getHashSignature() + "\n";
 	}
 	else {
 
@@ -69,8 +111,9 @@ BrickCoin::BrickCoin(EulerBrick brck) {
 }
 
 std::string BrickCoin::getSignature() {
-	return signature;
+	return this->signature;
 }
+
 
 
 std::string BrickCoin::getHashSignature() {

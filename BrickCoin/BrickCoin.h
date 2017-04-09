@@ -28,7 +28,9 @@
 	class BrickCoin{
 		public:
 			//Constructor to construct the coin frokm a EulerBrick
+			BrickCoin();
 			BrickCoin(EulerBrick brck);
+			BrickCoin(EulerBrick brck, bool verified);
 
 			//Function to get the signature of the BrickCoin
 			std::string getSignature();

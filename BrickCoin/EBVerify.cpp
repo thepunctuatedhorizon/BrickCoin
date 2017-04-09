@@ -24,6 +24,7 @@
 EBVerify::EBVerify(){
 	// If used, it is very important to ensure the verified flag is set false
 	verified = false;
+
 }
 
 
@@ -254,7 +255,8 @@ EBVerify::EBVerify(EulerBrick brick) {
 	{
 		//TODO: what else? Certainly we don't want this output, but it's for testing purposes.
 		verified = true;
-		//(*coin) = BrickCoin(brick);
+		coin = BrickCoin(brick, true);
+		
 		std::cout << "This is a match." << std::endl;
 	}
 
@@ -274,12 +276,12 @@ bool EBVerify::didItVerify(){
 
 
 
-EBVerify::EBVerify(BrickCoin coin){
+EBVerify::EBVerify(BrickCoin coinExp){
 
 	//Getting the signatures from the BrickCoin
-	std::string parseString = coin.getSignature();
+	std::string parseString = coinExp.getSignature();
 	
-	std::string SHA512hash = coin.getHashSignature();
+	std::string SHA512hash = coinExp.getHashSignature();
 
 	//TODO: MUST MAKE THIS INPUT RESISTANT!!!
 	
@@ -351,13 +353,14 @@ EBVerify::EBVerify(BrickCoin coin){
 	//If the Verifier on the generated brick is valid, the didItVerify will report true.
 	if ((*verifyThis).didItVerify()){
 		//We still have to verify the SHA512 Hash. So we generate a coin from which we get its HashSignature;
-		BrickCoin* coinVerify = new BrickCoin( (*generated) );
+		BrickCoin * coinVerify = new BrickCoin( (*generated) );
 
 		//Only if the hashes are the same do we say it truly verified.
 		
 		if (SHA512hash == (*coinVerify).getHashSignature()){
 			verified = true;
 			//TODO: What else needs to happen?
+			coin = (*verifyThis).getCoin();
 			//Certainly don't want production code to do this.
 			std::cout << "IT Truly verified" << std::endl;
 		}
@@ -367,13 +370,13 @@ EBVerify::EBVerify(BrickCoin coin){
 
 
 //TODO: Fix the signature reader. 
-EBVerify::EBVerify(std::string coin){
+EBVerify::EBVerify(std::string coinStr){
 
 	//TODO: MAKE THIS INPUT RESISTANT!!!
 
 	//This parses the input string into two parts, first the PTriples and Hash data, then second into the SHA512Hash.
-	char * parseChar1 = new char[coin.length() +1];
-	strcpy(parseChar1, coin.c_str());
+	char * parseChar1 = new char[coinStr.length() +1];
+	strcpy(parseChar1, coinStr.c_str());
 	char * pch1;
 	pch1 = strtok (parseChar1, "\n");
 	std::string parseString = pch1;
@@ -456,9 +459,8 @@ EBVerify::EBVerify(std::string coin){
 		if (SHA512hash == (*coinVerify).getHashSignature()){
 			verified = true;
 			//What do we really want it to do?
+			coin = (*verifyThis).getCoin();
 			std::cout << "IT Truly verified" << std::endl;
 		}
 	}
 }
-
-

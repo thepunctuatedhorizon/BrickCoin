@@ -12,7 +12,8 @@
 #include <vector>
 #include "..\TestServer.h"
 #include "..\BrickDataBase\db.h"
-//#include "..\EBVerify.h"
+#include "..\EBVerify.h"
+#include "..\BrickCoin.h"
 
 
 
@@ -34,10 +35,26 @@ int TestServer::fireOffACoinToDatabase(std::string coinText)
 	databaseHelper.startDatabase();
 
 	//Must figure out how to recreate the coinSignature?
-	//EBVerify* brickFromText = new EBVerify(coinText);
-	//BrickCoin coin = (*brickFromText).getCoin();
-	std::string coinSig = coinText; // coin.getSignature();
-	//databaseHelper.parseAndStore(coinSig);
+	//This parses the input string into two parts, first the PTriples and Hash data, then second into the SHA512Hash.
+	char * parseChar1 = new char[coinText.length() + 1];
+	strcpy(parseChar1, coinText.c_str());
+	char * pch1;
+	pch1 = strtok(parseChar1, "\n");
+	std::string parseString = pch1;
+	pch1 = strtok(NULL, "\n");
+	parseString = parseString + "\n" + pch1;
+	pch1 = strtok(NULL, "\n");
+	std::string SHA512hash = pch1;
+
+	//ONLY for TESTING PURPOSES
+	std::cout << parseString << std::endl;
+	std::cout << SHA512hash << std::endl;
+	EBVerify* brickFromText = new EBVerify(parseString + "\n" + SHA512hash +"\n");
+	if (brickFromText->getCoin().getSignature().size()>0) {
+		std::cout << "Fuck" << std::endl;
+	}
+	std::string coinSig = parseString + "\n" + SHA512hash + "\n";
+	databaseHelper.parseAndStore(coinSig);
 
 	/* Create SQL statement */
 	sql = "SELECT * from BRICK";
